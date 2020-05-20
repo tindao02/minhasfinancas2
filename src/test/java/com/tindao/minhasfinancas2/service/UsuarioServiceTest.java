@@ -39,10 +39,16 @@ public class UsuarioServiceTest
 	public void deveLancarErroAoValidarQuandoExistirEmailCadastrado()
 	{
 		//cenário
-		Usuario usuario = Usuario.builder().nome("usuario").email("test@gmail.com").senha("123456").data(LocalDate.of(2020, 10, 05)).build();
+		Usuario usuario = Usuario
+						.builder()
+						.nome("usuario")
+						.email("test@gmail.com")
+						.senha("123456")
+						.data(LocalDate.of(2020, 10, 05))
+						.build();
 		usuarioRepository.save(usuario);
 		
-		//ação
+		//execução
 		usuarioService.validarEmail("test@gmail.com");
 		
 	}
