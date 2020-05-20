@@ -21,12 +21,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tindao.minhasfinancas2.model.enuns.StatusLancamento;
 import com.tindao.minhasfinancas2.model.enuns.TipoLancamento;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Lancamento 
 {
 	@Id
