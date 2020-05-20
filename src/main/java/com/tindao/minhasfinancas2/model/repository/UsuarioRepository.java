@@ -6,5 +6,5 @@ import com.tindao.minhasfinancas2.model.entity.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>
 {
-
+	boolean existsByEmail(String email);
 }

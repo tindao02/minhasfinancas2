@@ -1,5 +1,6 @@
 package com.tindao.minhasfinancas2.model.entity;
 
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.OneToMany;
 
 import lombok.Builder;
 import lombok.Data;
+
 
 @Entity
 @Data

@@ -34,9 +34,8 @@ public class Lancamento
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuario_id")
 	@JsonIgnore
-	@Column(name = "usuario_id")
+	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
 	
 	private String descricao;

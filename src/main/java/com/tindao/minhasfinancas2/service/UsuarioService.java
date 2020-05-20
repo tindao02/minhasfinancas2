@@ -8,3 +8,4 @@ public interface UsuarioService
 	Usuario salvar(Usuario usuario);
 	void validarEmail(String email);
 }
+
