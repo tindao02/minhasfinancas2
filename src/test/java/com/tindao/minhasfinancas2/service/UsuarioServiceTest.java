@@ -68,7 +68,6 @@ public class UsuarioServiceTest
 		
 		//verificação
 		Mockito.verify(repository, Mockito.never()).save(usuario);
-		
 	}
 	
 	@Test(expected = Test.None.class)
