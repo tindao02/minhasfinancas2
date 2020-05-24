@@ -1,5 +1,7 @@
 package com.tindao.minhasfinancas2.api.dto;
 
+import javax.validation.constraints.Email;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

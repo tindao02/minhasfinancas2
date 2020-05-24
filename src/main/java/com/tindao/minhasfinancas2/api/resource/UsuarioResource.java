@@ -2,6 +2,8 @@ package com.tindao.minhasfinancas2.api.resource;
 
 import java.time.LocalDate;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +17,14 @@ import com.tindao.minhasfinancas2.exception.RegraNegocioException;
 import com.tindao.minhasfinancas2.model.entity.Usuario;
 import com.tindao.minhasfinancas2.service.UsuarioService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioResource 
 {
-	private UsuarioService service;
-	
-	public UsuarioResource(UsuarioService service)
-	{
-		this.service = service;
-	}
+	private final UsuarioService service;
 	
 	@PostMapping("/autenticar")
 	public ResponseEntity autenticar( @RequestBody UsuarioDTO dto)
@@ -41,7 +41,7 @@ public class UsuarioResource
 	}
 	
 	@PostMapping
-	public ResponseEntity salvar(@RequestBody UsuarioDTO dto)
+	public ResponseEntity salvar( @RequestBody UsuarioDTO dto)
 	{
 		Usuario usuario = Usuario
 						.builder()

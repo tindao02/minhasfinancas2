@@ -1,9 +1,8 @@
 package com.tindao.minhasfinancas2.api.resource;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
-import javax.persistence.Entity;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +25,15 @@ import com.tindao.minhasfinancas2.model.enuns.TipoLancamento;
 import com.tindao.minhasfinancas2.service.LancamentoService;
 import com.tindao.minhasfinancas2.service.UsuarioService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/lancamentos")
+@RequiredArgsConstructor
 public class LancamentoResource 
 {
-	private LancamentoService service;
-	private UsuarioService usuarioService;
-	
-	public LancamentoResource(LancamentoService service) 
-	{
-		this.service = service;
-	}
+	private final LancamentoService service;
+	private final UsuarioService usuarioService;
 	
 	@GetMapping
 	public ResponseEntity buscar(
@@ -53,7 +50,7 @@ public class LancamentoResource
 		
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
 		
-		if(usuario.isPresent())
+		if(!usuario.isPresent())
 		{
 			return ResponseEntity.badRequest().body("Não foi possível realizar a consulta. Usuário não encontrado para o Id informado");
 		}
@@ -73,6 +70,7 @@ public class LancamentoResource
 		try
 		{
 			Lancamento entidade = converter(dto);
+			entidade.setDataCadastro(LocalDate.now());
 			entidade = service.salvar(entidade);
 			return new ResponseEntity(entidade, HttpStatus.CREATED);
 		}
@@ -89,6 +87,8 @@ public class LancamentoResource
 			{
 				Lancamento lancamento = converter(dto);
 				lancamento.setId(entity.getId());
+				lancamento.setDataCadastro(entity.getDataCadastro());
+				service.atualizar(lancamento);
 				return ResponseEntity.ok(lancamento);
 			}
 			catch (RegraNegocioException e) 
@@ -97,6 +97,7 @@ public class LancamentoResource
 			}
 		}).orElseGet(() -> new ResponseEntity("Lancamento não encontrado na base de dados.", HttpStatus.BAD_REQUEST));
 	}
+	
 	
 	@DeleteMapping("{id}")
 	public ResponseEntity deletar(@PathVariable("id") long id)
@@ -111,7 +112,7 @@ public class LancamentoResource
 	{
 		Lancamento lancamento = new Lancamento();
 		lancamento.setId(dto.getId());
-		lancamento.setDescricao(dto.getDescrição());
+		lancamento.setDescricao(dto.getDescricao());
 		lancamento.setAno(dto.getAno());
 		lancamento.setMes(dto.getMes());
 		lancamento.setValor(dto.getValor());
@@ -122,8 +123,15 @@ public class LancamentoResource
 		
 		lancamento.setUsuario(usuario);
 		
-		lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
-		lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+		if(dto.getTipo() != null)
+		{
+			lancamento.setTipo(TipoLancamento.valueOf(dto.getTipo()));
+		}
+		
+		if(dto.getStatus() != null)
+		{
+			lancamento.setStatus(StatusLancamento.valueOf(dto.getStatus()));
+		}
 		
 		return lancamento;
 	}
