@@ -2,6 +2,7 @@ package com.tindao.minhasfinancas2.model.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -43,8 +44,7 @@ public class LancamentoRepositoryTest
 	@Test
 	public void deveDeletarUmLancamento()
 	{
-		Lancamento lancamento = criarLancamento();
-		entityManager.persist(lancamento);
+		Lancamento lancamento = criarEPersistirUmLancamento();
 		
 		lancamento = entityManager.find(Lancamento.class, lancamento.getId());
 		
@@ -54,17 +54,52 @@ public class LancamentoRepositoryTest
 		Assertions.assertThat(lancamentoInexistente).isNull();
 	}
 	
+	@Test
+	public void deveAtualizarUmlancamento()
+	{
+		Lancamento lancamento = criarEPersistirUmLancamento();
+		
+		lancamento.setAno(2018);
+		lancamento.setDescricao("Teste Atualizar");
+		lancamento.setStatus(StatusLancamento.CANCELADO);
+		
+		repository.save(lancamento);
+		
+		Lancamento lancamentoAtualizado = entityManager.find(Lancamento.class, lancamento.getId());
+		
+		Assertions.assertThat(lancamentoAtualizado.getAno()).isEqualTo(2018);
+		Assertions.assertThat(lancamentoAtualizado.getDescricao()).isEqualTo("Teste Atualizar");
+		Assertions.assertThat(lancamentoAtualizado.getStatus()).isEqualTo(StatusLancamento.CANCELADO);
+	}
+	
+	@Test
+	public void deveBuscarUmLancamentoPorId()
+	{
+		Lancamento lancamento = criarEPersistirUmLancamento();
+		
+		Optional<Lancamento> lancamentoEncontrado = repository.findById(lancamento.getId());
+		
+		Assertions.assertThat(lancamentoEncontrado.isPresent()).isTrue();
+	}
+	
 	private Lancamento criarLancamento()
 	{
 		return Lancamento.builder()
-				  .ano(2019)
-				  .mes(1)
-				  .descricao("lancamento teste")
-				  .valor(BigDecimal.valueOf(10))
-				  .status(StatusLancamento.PENDENTE)
-				  .tipo(TipoLancamento.RECEITA)
-				  .dataCadastro(LocalDate.now())
-				  .build();
+						  .ano(2019)
+						  .mes(1)
+						  .descricao("lancamento teste")
+						  .valor(BigDecimal.valueOf(10))
+						  .status(StatusLancamento.PENDENTE)
+						  .tipo(TipoLancamento.RECEITA)
+						  .dataCadastro(LocalDate.now())
+						  .build();
+	}
+	
+	private Lancamento criarEPersistirUmLancamento()
+	{
+		Lancamento lancamento = criarLancamento();
+		entityManager.persist(lancamento);
+		return lancamento;
 	}
 	
 }
